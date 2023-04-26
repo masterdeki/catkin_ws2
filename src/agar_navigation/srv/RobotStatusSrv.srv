@@ -1,0 +1,6 @@
+---
+bool auto_move
+int16 robot_speed
+int16 tenk_speed
+bool imu_connected
+string imu_model_name

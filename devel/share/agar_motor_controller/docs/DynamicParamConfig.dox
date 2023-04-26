@@ -1,0 +1,13 @@
+\subsubsection parameters ROS parameters
+
+Reads and maintains the following parameters on the ROS server
+
+- \b "~motor_speed" : \b [int] Speed for motors min: 0, default: 50, max: 100
+- \b "~tank_speed" : \b [int] Speed for tenk min: 0, default: 50, max: 100
+- \b "~min_speed" : \b [int] Minimum speed for turning wheels min: 0, default: 200, max: 1024
+- \b "~extra_brake_speed" : \b [int] Extra brake speed for high rpm difference min: 0, default: 400, max: 1024
+- \b "~analog_brake_fl" : \b [int] Strenght for front left analog brake min: 0, default: 425, max: 2048
+- \b "~analog_brake_rl" : \b [int] Strenght for rear left analog brake min: 0, default: 425, max: 2048
+- \b "~analog_brake_fr" : \b [int] Strenght for front right analog brake min: 0, default: 425, max: 2048
+- \b "~analog_brake_rr" : \b [int] Strenght for rear right analog brake min: 0, default: 425, max: 2048
+

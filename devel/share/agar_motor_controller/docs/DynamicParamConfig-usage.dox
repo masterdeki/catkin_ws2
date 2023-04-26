@@ -1,0 +1,14 @@
+\subsubsection usage Usage
+\verbatim
+<node name="agar_motor_controller" pkg="agar_motor_controller" type="agar_motor_controller">
+  <param name="motor_speed" type="int" value="50" />
+  <param name="tank_speed" type="int" value="50" />
+  <param name="min_speed" type="int" value="200" />
+  <param name="extra_brake_speed" type="int" value="400" />
+  <param name="analog_brake_fl" type="int" value="425" />
+  <param name="analog_brake_rl" type="int" value="425" />
+  <param name="analog_brake_fr" type="int" value="425" />
+  <param name="analog_brake_rr" type="int" value="425" />
+</node>
+\endverbatim
+

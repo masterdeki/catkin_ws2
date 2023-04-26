@@ -1,0 +1,8 @@
+prefix=/home/dejan/catkin_ws/devel
+
+Name: reach_rs_driver
+Description: Description of reach_rs_driver
+Version: 0.0.1
+Cflags: -I/home/dejan/catkin_ws/devel/include
+Libs: -L${prefix}/lib -lreach_rs_driver
+Requires: rospy sensor_msgs message_runtime

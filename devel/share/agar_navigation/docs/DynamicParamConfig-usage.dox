@@ -1,0 +1,11 @@
+\subsubsection usage Usage
+\verbatim
+<node name="motor_driver" pkg="motor_driver" type="motor_driver">
+  <param name="motor_speed" type="int" value="50" />
+  <param name="tank_speed" type="int" value="50" />
+  <param name="analog_brake" type="int" value="0" />
+  <param name="min_speed" type="int" value="200" />
+  <param name="rate_hz" type="int" value="20" />
+</node>
+\endverbatim
+

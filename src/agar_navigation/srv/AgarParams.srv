@@ -1,0 +1,5 @@
+---
+bool auto_move
+bool brake_enabled
+int16 robot_speed
+int16 tenk_speed

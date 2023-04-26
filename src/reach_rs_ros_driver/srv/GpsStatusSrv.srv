@@ -1,0 +1,5 @@
+---
+bool gps_connected
+float64 latitude
+float64 longitude
+sensor_msgs/NavSatStatus status

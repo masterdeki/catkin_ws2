@@ -1,0 +1,7 @@
+set(agar_motor_controller_SETUP_PY_SETUP_MODULE "distutils.core")
+set(agar_motor_controller_SETUP_PY_VERSION "0.0.0")
+set(agar_motor_controller_SETUP_PY_SCRIPTS "")
+set(agar_motor_controller_SETUP_PY_PACKAGES "agar_motor_controller")
+set(agar_motor_controller_SETUP_PY_PACKAGE_DIRS "src/agar_motor_controller")
+set(agar_motor_controller_SETUP_PY_MODULES "")
+set(agar_motor_controller_SETUP_PY_MODULE_DIRS "")

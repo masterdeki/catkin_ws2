@@ -1,0 +1,75 @@
+<launch>
+
+    <!-- Parameters -->
+    <arg name="ros_ip" default="192.168.0.61" />
+    <!-- <arg name="ros_ip" default="192.168.43.46" /> -->
+    <arg name="ros_port" default="11311" />
+    <arg name="ros_bridge" default="true" />
+
+
+    <!-- Environment Variables -->
+    <env name="ROS_IP" value="$(arg ros_ip)" />
+    <env name="ROS_MASTER_URI" value="http://$(arg ros_ip):$(arg ros_port)" />
+    <env name="ROS_HOSTNAME" value="$(arg ros_ip)" />
+
+    <env name="ROS_PYTHON_LOG_CONFIG_FILE" value="$(find agar_launch)/config/roslog.conf" />
+
+    <!-- Ros bridge -->
+    <include if="$(arg ros_bridge)" file="$(find rosbridge_server)/launch/rosbridge_websocket.launch">
+        <arg name="port" value="9090"/>
+    </include>
+
+    <rosparam file="$(find agar_launch)/config/startup_params.yaml" command="load" />   
+
+    <!-- <node name="serial_node_arduino" pkg="rosserial_python" type="serial_node.py">
+        <param name="port" type="string" value="/dev/ttyUSB-ARDUINO"/>
+        <param name="baud" type="int" value="57600"/>
+    </node> -->
+
+    <!-- <node name="serial_node_ardshield" pkg="rosserial_python" type="serial_node.py">
+        <param name="port" type="string" value="/dev/ttyUSB-ARDSHIELD"/>
+        <param name="baud" type="int" value="57600"/>
+    </node> -->
+
+
+    <!-- <include file="$(find microstrain_inertial_driver)/launch/microstrain.launch"> 
+        <arg name="params_file" value="$(find agar_launch)/config/imu_params.yaml"/>
+    </include>   -->
+    
+    <!-- <node name="gps_fix" pkg="reach_rs_driver" type="reach_rs_driver_node" /> -->
+
+    <!--  <node name="robot_position" pkg="agar_navigation" type="robot_position.py" respawn="true" /> -->
+    <!-- <node name="robot_navigation" pkg="agar_navigation" type="nav_to_point.py" respawn="true" /> -->
+
+
+    <!-- <node name="agar_initialization" pkg="agar_navigation" type="agar_initialization.py" respawn="true"  /> -->
+    <!-- <node name="agar_camera" pkg="agar_navigation" type="camera.py" respawn="true"  /> -->
+    
+    <!-- <node name="agar_logger" pkg="agar_navigation" type="agar_logger.py" respawn="true"  /> -->
+
+
+    <!-- <node name="motor_controller" pkg="agar_navigation" type="motor_controller.py" respawn="true"  /> -->
+    
+    <!-- <node name="teleop_node" pkg="teleop_twist_joy" type="teleop_node">
+        <param name="axis_linear" value="1"/>
+        <param name="axis_angular" value="0"/>
+        
+        <param name="scale_linear" value="1.37"/>
+        <param name="scale_angular" value="1.00"/>
+    </node> -->
+    
+    <node name="motor_driver_ros_wrapper" pkg="agar_motor_controller" type="motor_driver_ros_wrapper.py" respawn="true"  /> 
+   
+
+
+
+    <!-- <node name="motor_controller_new" pkg="agar_navigation" type="motor_controller_new.py" respawn="true"  /> -->
+    <!-- <node name="battery_controller" pkg="agar_navigation" type="battery_controller.py" respawn="true"  /> -->
+
+    
+    
+    <!-- <node name="robot_speed_server" pkg="agar_navigation" type="robot_speed_save_server.py" respawn="true"  />
+    <node name="auto_move_server" pkg="agar_navigation" type="auto_move_save_server.py" respawn="true"  />
+    <node name="agar_params_server" pkg="agar_navigation" type="agar_params_server.py" respawn="true"  /> -->
+
+</launch>

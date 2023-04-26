@@ -1,0 +1,7 @@
+set(agar_common_SETUP_PY_SETUP_MODULE "distutils.core")
+set(agar_common_SETUP_PY_VERSION "0.0.1")
+set(agar_common_SETUP_PY_SCRIPTS "")
+set(agar_common_SETUP_PY_PACKAGES "agar_common")
+set(agar_common_SETUP_PY_PACKAGE_DIRS "src/agar_common")
+set(agar_common_SETUP_PY_MODULES "")
+set(agar_common_SETUP_PY_MODULE_DIRS "")

@@ -1,0 +1,8 @@
+prefix=/home/dejan/catkin_ws/install
+
+Name: agar_navigation
+Description: Description of agar_navigation
+Version: 0.0.1
+Cflags: -I${prefix}/include
+Libs: -L${prefix}/lib -lagar_navigation
+Requires: rospy std_msgs geometry_msgs tf2_msgs sensor_msgs message_runtime dynamic_reconfigure

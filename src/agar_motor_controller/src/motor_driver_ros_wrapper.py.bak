@@ -1,0 +1,218 @@
+#!/usr/bin/env python3
+
+import rospy
+from dynamic_reconfigure.server import Server
+from agar_motor_controller.cfg import DynamicParamConfig
+from geometry_msgs.msg import Twist
+from std_msgs.msg import Int32MultiArray
+
+from motor_driver import motor_driver
+from motor_driver import motor_direction
+from std_msgs.msg import UInt64
+
+from agar_common.klsreader import klsreader
+from agar_navigation.msg import motor_status
+from agar_navigation.msg import controller_status 
+
+
+
+def param_callback(config, level):
+    motor_driver.set_speed(config.motor_speed, config.tank_speed, config.min_speed)
+    motor_driver.set_analog_brakes_speed(config.analog_brake_fl, config.analog_brake_rl, config.analog_brake_fr, config.analog_brake_rr)
+    return config
+
+
+if __name__ == '__main__':
+    rospy.init_node('motor_driver_ros_wrapper')
+
+    motor_driver = motor_driver()
+    rospy.on_shutdown(motor_driver.stop)
+
+    kls = klsreader()
+
+    safe_brake_active = True
+    motor_driver.stop()
+    motor_driver.activate_all_brakes()
+
+    motor_speed = rospy.get_param('agar/robot_speed')
+    tenk_speed = rospy.get_param('agar/tenk_speed')
+
+    motor_driver.set_speed(motor_speed, tenk_speed, 200)
+    motor_driver.set_analog_brakes_speed(425, 425, 425, 425)
+
+    reconfigure_server = Server(DynamicParamConfig, callback=param_callback)
+
+    def move_robot(msg):
+        global safe_brake_active
+        if safe_brake_active == False:
+            motor_driver.move_by_velocity(msg.linear.x, msg.angular.z)
+    rospy.Subscriber("/cmd_vel", Twist, move_robot, queue_size=1)
+
+
+
+    def brake_robot(msg):
+        global safe_brake_active
+
+        print(msg)
+
+        if msg.data == 1:
+            rospy.set_param("/agar/brake_enabled", True)
+            safe_brake_active = True
+            motor_driver.stop()
+            motor_driver.activate_all_brakes()
+        else: 
+            rospy.set_param("/agar/brake_enabled", False)
+            safe_brake_active = False
+            motor_driver.release_all_brakes()
+    rospy.Subscriber("/brake_status", UInt64, brake_robot, queue_size=1)
+
+
+
+    actuator_control = False
+    actuator_speed = 150
+
+    def move_actuators(msg):
+        global actuator_control
+        actuator_control = True
+        #print(msg)
+
+        is_any_active = False
+
+        fl_speed = actuator_speed
+        fr_speed = actuator_speed
+        rl_speed = actuator_speed
+        rr_speed = actuator_speed
+
+        fl_dir = motor_direction.NEUTRAL
+        fr_dir = motor_direction.NEUTRAL
+        rl_dir = motor_direction.NEUTRAL
+        rr_dir = motor_direction.NEUTRAL
+
+        if msg.data[0] == 1:
+            is_any_active = True
+            fl_dir = motor_direction.FORWARD
+        elif msg.data[0] == -1:
+            is_any_active = True
+            fl_dir = motor_direction.BACKWARD
+        else:
+            fl_speed = 0
+
+        if msg.data[1] == 1:
+            is_any_active = True
+            fr_dir = motor_direction.FORWARD
+        elif msg.data[1] == -1:
+            is_any_active = True
+            fr_dir = motor_direction.BACKWARD
+        else:
+            fr_speed = 0
+
+        if msg.data[2] == 1:
+            is_any_active = True
+            rl_dir = motor_direction.BACKWARD
+        elif msg.data[2] == -1:
+            is_any_active = True
+            rl_dir = motor_direction.FORWARD
+        else:
+            rl_speed = 0
+
+        if msg.data[3] == 1:
+            is_any_active = True
+            rr_dir = motor_direction.BACKWARD
+        elif msg.data[3] == -1:
+            is_any_active = True
+            rr_dir = motor_direction.FORWARD
+        else:
+            rr_speed = 0
+
+        motor_driver.move(fl_speed, fl_dir, rl_speed, rl_dir, fr_speed, fr_dir, rr_speed, rr_dir)
+
+        if is_any_active == False:
+            actuator_control = False
+    rospy.Subscriber("/actuators", Int32MultiArray, move_actuators, queue_size=1) 
+
+    rospy.loginfo("Motor driver started.")
+
+    #rospy.spin()
+
+
+
+    def publish_motor_status(data):
+        #print(data_rr)
+
+
+        cont_fl = controller_status()
+        cont_fl.rpm = data["front_left"]["rpm"]
+        cont_fl.phaseCurrent = data["front_left"]["phaseCurrent"]
+        cont_fl.batteryVoltage = data["front_left"]["batteryVoltage"]
+        cont_fl.controllerTemp = data["front_left"]["controllerTemp"]
+
+        cont_rl = controller_status()
+        cont_rl.rpm = data["rear_left"]["rpm"]
+        cont_rl.phaseCurrent = data["rear_left"]["phaseCurrent"]
+        cont_rl.batteryVoltage = data["rear_left"]["batteryVoltage"]
+        cont_rl.controllerTemp = data["rear_left"]["controllerTemp"]
+        # cont_rl.reverse = data["rear_left"]["reverse"]
+        # cont_rl.brakePedal = data["rear_left"]["brakePedal"]
+        # cont_rl.brakeSwitch = data["rear_left"]["brakeSwitch"]
+        # cont_rl.footSwitch = data["rear_left"]["footSwitch"]
+
+        cont_fr = controller_status()
+        cont_fr.rpm = data["front_right"]["rpm"]
+        cont_fr.phaseCurrent = data["front_right"]["phaseCurrent"]
+        cont_fr.batteryVoltage = data["front_right"]["batteryVoltage"]
+        cont_fr.controllerTemp = data["front_right"]["controllerTemp"]
+
+        cont_rr = controller_status()
+        cont_rr.rpm = data["rear_right"]["rpm"]
+        cont_rr.phaseCurrent = data["rear_right"]["phaseCurrent"]
+        cont_rr.batteryVoltage = data["rear_right"]["batteryVoltage"]
+        cont_rr.controllerTemp = data["rear_right"]["controllerTemp"]
+        # cont_rr.reverse = data["rear_right"]["reverse"]
+        # cont_rr.brakePedal = data["rear_right"]["brakePedal"]
+        # cont_rr.brakeSwitch = data["rear_right"]["brakeSwitch"]
+        # cont_rr.footSwitch = data["rear_right"]["footSwitch"]
+
+
+        mtr_status = motor_status()
+        mtr_status.motor_fl = cont_fl
+        mtr_status.motor_rl = cont_rl
+        mtr_status.motor_fr = cont_fr
+        mtr_status.motor_rr = cont_rr
+
+        motor_status_pub.publish(mtr_status)
+    motor_status_pub = rospy.Publisher('/motor_status', motor_status, queue_size=1)    
+
+
+    rate = rospy.Rate(20)
+
+    while not rospy.is_shutdown():
+
+        motor_data = kls.get_motor_status()
+        publish_motor_status(motor_data)
+
+
+
+        test_rpm = motor_data["front_left"]["rpm"]
+        if test_rpm > 500:
+            motor_driver.activate_all_analog_brakes_controlled_speed()
+        else:
+            motor_driver.release_all_analog_brakes()
+
+
+        # temp_speed = rospy.get_param('agar/robot_speed')
+        # if temp_speed != motor_speed:
+        #     motor_speed = temp_speed
+        #     motor_driver.set_speed(motor_speed, tenk_speed, 200)
+
+        # temp_tenk_speed = rospy.get_param('agar/tenk_speed')
+        # if temp_tenk_speed != tenk_speed:
+        #     tenk_speed = temp_tenk_speed
+        #     motor_driver.set_speed(motor_speed, tenk_speed, 200)
+
+        if rospy.is_shutdown():
+            break
+
+        rate.sleep()
+
+    motor_driver.stop()
+    motor_driver.activate_all_brakes()

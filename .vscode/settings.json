@@ -1,0 +1,19 @@
+{
+    "python.autoComplete.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages"
+    ],
+    "python.analysis.extraPaths": [
+        "/opt/ros/noetic/lib/python3/dist-packages",
+        "./src/agar_common/src/scripts",
+        "./src/agar_common/src/agar_common",
+        "./src/agar_common/src",
+        "./src/agar_common/src",
+        "./src/agar_common/src",
+        "./src/agar_common/src",
+        "./src/agar_common/src",
+        "./src/agar_common/src",
+        "./src/agar_motor_controller/src"
+    ],
+    "cmake.sourceDirectory": "${workspaceFolder}/src/agar_common",
+    "C_Cpp.errorSquiggles": "disabled"
+}

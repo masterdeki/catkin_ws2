@@ -1,0 +1,2 @@
+agar_common:agar_launch:agar_motor_controller:agar_navigation:r2d2:reach_rs_ros_driver:testbot_description
+-DCATKIN_DEVEL_PREFIX=/home/dejan/catkin_ws/devel -DCMAKE_INSTALL_PREFIX=/home/dejan/catkin_ws/install -G Unix Makefiles

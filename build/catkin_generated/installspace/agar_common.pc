@@ -1,0 +1,8 @@
+prefix=/usr/local
+
+Name: agar_common
+Description: Description of agar_common
+Version: 0.0.1
+Cflags: 
+Libs: -L${prefix}/lib 
+Requires: 

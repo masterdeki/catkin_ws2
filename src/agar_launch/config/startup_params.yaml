@@ -1,0 +1,12 @@
+agar:
+  auto_move: false
+  robot_speed: 50
+  tenk_speed: 50
+  reach_host: 192.168.2.15
+  reach_port: 9001
+  gps_latitude: 43.33105542
+  gps_longitude: 21.89057163
+  record_log: False
+  log_directory: /home/pi/agar_log/
+  log_filename: log
+  brake_enabled: false
